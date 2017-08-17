@@ -1,5 +1,6 @@
 package com.framgia.fsalon.utils.binding;
 
+import android.app.Activity;
 import android.databinding.BindingAdapter;
 import android.databinding.InverseBindingAdapter;
 import android.databinding.InverseBindingListener;
@@ -10,6 +11,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
@@ -276,5 +278,21 @@ public class BindingUtils {
     @BindingAdapter("bind:selection")
     public static void setResourceId(Spinner spinner, int position) {
         spinner.setSelection(position);
+    }
+
+    @BindingAdapter("activity")
+    public static void setUpDrawerListener(final DrawerLayout drawlayout, final Activity activity) {
+        ActionBarDrawerToggle actionBarDrawerToggle =
+            new ActionBarDrawerToggle(activity, drawlayout, R.string.msg_open_drawer,
+                R.string.msg_close_drawer);
+        actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
+        drawlayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_filter_30dp);
+        actionBarDrawerToggle.syncState();
+    }
+
+    @BindingAdapter("textColor")
+    public static void setTextColor(TextView text, int textColor) {
+        text.setTextColor(text.getResources().getColor(textColor));
     }
 }

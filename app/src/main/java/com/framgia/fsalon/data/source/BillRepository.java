@@ -26,7 +26,7 @@ public class BillRepository implements BillDataSource {
 
     @Override
     public Observable<List<ListBillRespond>> filterBills(String type, int startDate, int endDate,
-                                                         int status, int departmentId,
+                                                         String status, int departmentId,
                                                          int customerId) {
         return mRemoteDataSource
             .filterBills(type, startDate, endDate, status, departmentId, customerId);

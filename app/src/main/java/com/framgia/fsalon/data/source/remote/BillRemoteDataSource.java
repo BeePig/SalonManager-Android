@@ -68,7 +68,7 @@ public class BillRemoteDataSource extends BaseRemoteDataSource implements BillDa
 
     @Override
     public Observable<List<ListBillRespond>> filterBills(String type, int startDate, int endDate,
-                                                         int status, int departmentId,
+                                                         String status, int departmentId,
                                                          int customerId) {
         Map<String, String> parrams = new HashMap<>();
         if (type != null) {

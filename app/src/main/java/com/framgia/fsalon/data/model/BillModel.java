@@ -1,7 +1,9 @@
 package com.framgia.fsalon.data.model;
 
 import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 
+import com.framgia.fsalon.BR;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -13,6 +15,7 @@ import java.util.List;
 public interface BillModel {
     /**
      * Bill
+     *
      * @param <T>
      */
     class Bill<T extends BillItem> extends BaseObservable {
@@ -37,6 +40,10 @@ public interface BillModel {
         @Expose
         @SerializedName("bill_items")
         protected List<T> mBillItems;
+        @Expose
+        @SerializedName("image_url")
+        protected String mImageUrl = "http://hinhnendep.pro/wp-content/uploads/2016/05/" +
+            "nhung-hinh-anh-avatar-trai-dep-cuc-hot-khien-ban-ngay-ngat-6.jpg";
 
         public int getCustomerId() {
             return mCustomerId;
@@ -54,20 +61,24 @@ public interface BillModel {
             mPhone = phone;
         }
 
+        @Bindable
         public int getStatus() {
             return mStatus;
         }
 
         public void setStatus(int status) {
             mStatus = status;
+            notifyPropertyChanged(BR.status);
         }
 
+        @Bindable
         public String getCustomerName() {
             return mCustomerName;
         }
 
         public void setCustomerName(String customerName) {
             mCustomerName = customerName;
+            notifyPropertyChanged(BR.customerName);
         }
 
         public int getOrderBookingId() {
@@ -78,12 +89,14 @@ public interface BillModel {
             mOrderBookingId = orderBookingId;
         }
 
+        @Bindable
         public float getGrandTotal() {
             return mGrandTotal;
         }
 
         public void setGrandTotal(float grandTotal) {
             mGrandTotal = grandTotal;
+            notifyPropertyChanged(BR.grandTotal);
         }
 
         public List<T> getBillItems() {
@@ -92,6 +105,14 @@ public interface BillModel {
 
         public void setBillItems(List<T> billItems) {
             mBillItems = billItems;
+        }
+
+        public String getImageUrl() {
+            return mImageUrl;
+        }
+
+        public void setImageUrl(String imageUrl) {
+            mImageUrl = imageUrl;
         }
     }
 

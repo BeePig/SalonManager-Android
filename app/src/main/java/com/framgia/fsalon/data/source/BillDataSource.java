@@ -14,6 +14,6 @@ import io.reactivex.Observable;
 public interface BillDataSource {
     Observable<BillResponse> createBill(BillRequest billRequest);
     Observable<List<ListBillRespond>> filterBills(String type, int startDate, int endDate,
-                                                  int status, int departmentId, int customerId);
+                                                  String status, int departmentId, int customerId);
     Observable<BillResponse> getBillById(int id);
 }

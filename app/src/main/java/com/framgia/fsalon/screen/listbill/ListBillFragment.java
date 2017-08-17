@@ -9,7 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.framgia.fsalon.R;
-import com.framgia.fsalon.databinding.FragmentListbillBinding;
+import com.framgia.fsalon.data.source.BillRepository;
+import com.framgia.fsalon.data.source.SalonRepository;
+import com.framgia.fsalon.data.source.api.FSalonServiceClient;
+import com.framgia.fsalon.data.source.remote.BillRemoteDataSource;
+import com.framgia.fsalon.data.source.remote.SalonRemoteDataSource;
+import com.framgia.fsalon.databinding.FragmentListBillBinding;
 
 /**
  * Listbill Screen.
@@ -26,7 +31,9 @@ public class ListBillFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mViewModel = new ListBillViewModel(getActivity());
         ListBillContract.Presenter presenter =
-            new ListBillPresenter(mViewModel);
+            new ListBillPresenter(mViewModel, new BillRepository(new BillRemoteDataSource(
+                FSalonServiceClient.getInstance())), new SalonRepository(new
+                SalonRemoteDataSource(FSalonServiceClient.getInstance())));
         mViewModel.setPresenter(presenter);
     }
 
@@ -34,8 +41,8 @@ public class ListBillFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        FragmentListbillBinding binding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_listbill, container, false);
+        FragmentListBillBinding binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_list_bill, container, false);
         binding.setViewModel((ListBillViewModel) mViewModel);
         return binding.getRoot();
     }

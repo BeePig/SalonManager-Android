@@ -19,6 +19,7 @@ import com.framgia.fsalon.R;
 import com.framgia.fsalon.data.model.ManageBookingResponse;
 import com.framgia.fsalon.data.model.Salon;
 import com.framgia.fsalon.screen.scheduler.detail.BookingDetailActivity;
+import com.framgia.fsalon.utils.OnDepartmentItemClick;
 import com.framgia.fsalon.utils.Utils;
 import com.framgia.fsalon.utils.navigator.Navigator;
 import com.framgia.fsalon.wiget.StickyHeaderLayoutManager;
@@ -45,6 +46,7 @@ import static com.framgia.fsalon.screen.scheduler.SchedulerViewModel.TabFilter.T
 import static com.framgia.fsalon.screen.scheduler.SchedulerViewModel.TabFilter.TAB_TOMORROW;
 import static com.framgia.fsalon.screen.scheduler.SchedulerViewModel.TabFilter.TAB_YESTERDAY;
 import static com.framgia.fsalon.utils.Constant.ApiParram.OUT_OF_INDEX;
+import static com.framgia.fsalon.utils.Constant.FIRST_ITEM;
 import static com.framgia.fsalon.utils.Constant.NO_SCROLL;
 
 /**
@@ -52,8 +54,7 @@ import static com.framgia.fsalon.utils.Constant.NO_SCROLL;
  */
 public class SchedulerViewModel extends BaseObservable
     implements SchedulerContract.ViewModel, DatePickerDialog.OnDateSetListener,
-    DialogInterface.OnCancelListener {
-    private static final int FIRST_ITEM_SALON = 0;
+    DialogInterface.OnCancelListener, OnDepartmentItemClick {
     private SchedulerContract.Presenter mPresenter;
     private int mTabFilter;
     private SchedulerAdapter mAdapter;
@@ -62,7 +63,7 @@ public class SchedulerViewModel extends BaseObservable
     private boolean mIsLoadingMore = false;
     private Calendar mCalendar;
     private FragmentManager mFragmentManager;
-    private int mStartDate = Utils.createTimeStamp(SchedulerViewModel.TabFilter.TAB_TODAY);
+    private int mStartDate = Utils.createTimeStamp(TAB_TODAY);
     private int mEndDate = OUT_OF_INDEX;
     private DatePickerDialog mDatePickerDialog;
     private int mTypeSelectDate;
@@ -271,25 +272,15 @@ public class SchedulerViewModel extends BaseObservable
     @Override
     public void onGetSalonsSuccess(List<Salon> salons) {
         setDepartmentAdapter(new DepartmentAdapter(mFragment.getContext(), salons, this));
-        mDepartmentAdapter.selectedPosition(FIRST_ITEM_SALON);
-        mSalonId = mDepartmentAdapter.getItem(FIRST_ITEM_SALON).getId();
-        setSalonName(mDepartmentAdapter.getItem(FIRST_ITEM_SALON).getName());
+        mDepartmentAdapter.selectedPosition(FIRST_ITEM);
+        mSalonId = mDepartmentAdapter.getItem(FIRST_ITEM).getId();
+        setSalonName(mDepartmentAdapter.getItem(FIRST_ITEM).getName());
         onFilterData();
     }
 
     @Override
     public void onError(String message) {
         mNavigator.showToast(message);
-    }
-
-    @Override
-    public void selectedSalonPosition(int position, Salon salon) {
-        if (salon == null) {
-            return;
-        }
-        mDepartmentAdapter.selectedPosition(position);
-        mSalonId = salon.getId();
-        setSalonName(salon.getName());
     }
 
     @Override
@@ -513,6 +504,15 @@ public class SchedulerViewModel extends BaseObservable
     public void setSalonName(String salonName) {
         mSalonName = salonName;
         notifyPropertyChanged(BR.salonName);
+    }
+
+    @Override
+    public void onSelectedSalonPosition(int pos, Salon salon) {
+        if (salon == null) {
+            return;
+        }
+        mDepartmentAdapter.selectedPosition(pos);
+        mSalonId = salon.getId();
     }
 
     /**

@@ -100,4 +100,8 @@
     <string name="msg_cant_find_date">Can\'t find booking day</string>
     <string name="title_information">Information</string>
     <string name="title_bill_detail">Bill Detail</string>
+    <string name="msg_open_drawer">open</string>
+    <string name="msg_close_drawer">close</string>
+    <string name="title_pending">Pending</string>
+    <string name="title_completed">Completed</string>
 </resources>

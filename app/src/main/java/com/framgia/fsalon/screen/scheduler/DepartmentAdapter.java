@@ -14,6 +14,7 @@ import com.framgia.fsalon.BaseRecyclerViewAdapter;
 import com.framgia.fsalon.R;
 import com.framgia.fsalon.data.model.Salon;
 import com.framgia.fsalon.databinding.ItemDepartmentBinding;
+import com.framgia.fsalon.utils.OnDepartmentItemClick;
 
 import java.util.List;
 
@@ -23,14 +24,14 @@ import java.util.List;
 public class DepartmentAdapter
     extends BaseRecyclerViewAdapter<Salon, DepartmentAdapter.ViewHolder> {
     private List<Salon> mData;
-    private SchedulerViewModel mViewModel;
     private int mSelectedPosition = -1;
+    private OnDepartmentItemClick mOnDepartmentItemClick;
 
-    protected DepartmentAdapter(@NonNull Context context, List<Salon> data,
-                                SchedulerViewModel viewModel) {
+    public DepartmentAdapter(@NonNull Context context, List<Salon> data,
+                                OnDepartmentItemClick onDepartmentItemClick) {
         super(context);
         mData = data;
-        mViewModel = viewModel;
+        mOnDepartmentItemClick = onDepartmentItemClick;
     }
 
     public void selectedPosition(int position) {
@@ -59,7 +60,7 @@ public class DepartmentAdapter
         ItemDepartmentBinding binding =
             DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
                 R.layout.item_department, parent, false);
-        return new DepartmentAdapter.ViewHolder(binding, mViewModel);
+        return new DepartmentAdapter.ViewHolder(binding);
     }
 
     @Override
@@ -77,12 +78,10 @@ public class DepartmentAdapter
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ItemDepartmentBinding mBinding;
-        private SchedulerViewModel mViewModel;
 
-        public ViewHolder(ItemDepartmentBinding binding, SchedulerViewModel viewModel) {
+        public ViewHolder(ItemDepartmentBinding binding) {
             super(binding.getRoot());
             mBinding = binding;
-            mViewModel = viewModel;
         }
 
         void bindData(Salon salon) {
@@ -90,8 +89,8 @@ public class DepartmentAdapter
                 return;
             }
             ViewHolderModel
-                model = new ViewHolderModel(salon, mViewModel, getAdapterPosition(),
-                mSelectedPosition == getAdapterPosition());
+                model = new ViewHolderModel(salon, getAdapterPosition(),
+                mSelectedPosition == getAdapterPosition(), mOnDepartmentItemClick);
             mBinding.setViewHolderModel(model);
             mBinding.executePendingBindings();
         }
@@ -102,16 +101,16 @@ public class DepartmentAdapter
      */
     public class ViewHolderModel extends BaseObservable {
         private Salon mSalon;
-        private SchedulerViewModel mViewModel;
         private int mPosition;
         private boolean mIsSelected;
+        private OnDepartmentItemClick mOnItemClick;
 
-        public ViewHolderModel(Salon salon, SchedulerViewModel viewModel, int position,
-                               boolean isSelected) {
+        public ViewHolderModel(Salon salon, int position, boolean isSelected,
+                               OnDepartmentItemClick itemClick) {
             mSalon = salon;
-            mViewModel = viewModel;
             mPosition = position;
             mIsSelected = isSelected;
+            mOnItemClick = itemClick;
         }
 
         @Bindable
@@ -122,16 +121,6 @@ public class DepartmentAdapter
         public void setSalon(Salon salon) {
             mSalon = salon;
             notifyPropertyChanged(BR.salon);
-        }
-
-        @Bindable
-        public SchedulerViewModel getViewModel() {
-            return mViewModel;
-        }
-
-        public void setViewModel(SchedulerViewModel viewModel) {
-            mViewModel = viewModel;
-            notifyPropertyChanged(BR.viewModel);
         }
 
         @Bindable
@@ -152,6 +141,16 @@ public class DepartmentAdapter
         public void setSelected(boolean selected) {
             mIsSelected = selected;
             notifyPropertyChanged(BR.selected);
+        }
+
+        @Bindable
+        public OnDepartmentItemClick getOnItemClick() {
+            return mOnItemClick;
+        }
+
+        public void setOnItemClick(OnDepartmentItemClick onItemClick) {
+            mOnItemClick = onItemClick;
+            notifyDataSetChanged();
         }
     }
 }
